@@ -4,6 +4,13 @@ set -euo pipefail
 REPO="${CONTENT_FLYWHEEL_REPO:-76776198xiong-stack/hermes-content-flywheel-skill}"
 BRANCH="${CONTENT_FLYWHEEL_BRANCH:-main}"
 DEST="${HERMES_SKILLS_DIR:-$HOME/.hermes/skills}/social-media/content-flywheel"
+CLEANUP_DIR=""
+
+cleanup() {
+  if [ -n "$CLEANUP_DIR" ] && [ -d "$CLEANUP_DIR" ]; then
+    rm -rf "$CLEANUP_DIR"
+  fi
+}
 
 log() {
   printf '%s\n' "$*"
@@ -27,17 +34,16 @@ install_from_github() {
   need_cmd curl
   need_cmd unzip
 
-  local tmp
-  tmp="$(mktemp -d)"
-  trap "rm -rf '$tmp'" EXIT
+  CLEANUP_DIR="$(mktemp -d)"
+  trap cleanup EXIT
 
   local zip_url="https://github.com/${REPO}/archive/refs/heads/${BRANCH}.zip"
   log "Downloading ${zip_url}"
-  curl -fsSL "$zip_url" -o "$tmp/repo.zip"
-  unzip -q "$tmp/repo.zip" -d "$tmp"
+  curl -fsSL "$zip_url" -o "$CLEANUP_DIR/repo.zip"
+  unzip -q "$CLEANUP_DIR/repo.zip" -d "$CLEANUP_DIR"
 
   local extracted
-  extracted="$(find "$tmp" -maxdepth 1 -type d -name '*hermes-content-flywheel-skill*' | head -n 1)"
+  extracted="$(find "$CLEANUP_DIR" -maxdepth 1 -type d -name '*hermes-content-flywheel-skill*' | head -n 1)"
   if [ -z "$extracted" ] || [ ! -d "$extracted/content-flywheel" ]; then
     log "Could not find content-flywheel in downloaded archive."
     exit 1
