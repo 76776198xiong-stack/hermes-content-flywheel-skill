@@ -29,7 +29,7 @@ install_from_github() {
 
   local tmp
   tmp="$(mktemp -d)"
-  trap 'rm -rf "$tmp"' EXIT
+  trap "rm -rf '$tmp'" EXIT
 
   local zip_url="https://github.com/${REPO}/archive/refs/heads/${BRANCH}.zip"
   log "Downloading ${zip_url}"
