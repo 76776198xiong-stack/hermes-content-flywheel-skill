@@ -20,7 +20,7 @@ It helps Hermes support short-video scripts, posts, article outlines, publishing
 One-line install:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/76776198xiong-stack/hermes-content-flywheel-skill/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/76776198xiong-stack/hermes-content-flywheel-skill/1cf0888125032b6656bb2b3bb40aa344dd098972/install.sh | bash
 ```
 
 Or clone first:
